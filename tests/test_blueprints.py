@@ -36,7 +36,7 @@ def test_blueprint_specific_error_handling(app, client):
 
     @app.errorhandler(403)
     def app_forbidden(e):
-        return "application itself says no", 403
+        return "different message", 403 #modificado para falhar
 
     assert client.get("/frontend-no").data == b"frontend says no"
     assert client.get("/backend-no").data == b"backend says no"
@@ -185,7 +185,7 @@ def test_templates_and_static(test_apps):
     rv = client.get("/admin/index2")
     assert rv.data == b"Hello from the Admin"
     rv = client.get("/admin/static/test.txt")
-    assert rv.data.strip() == b"Admin File"
+    assert rv.data.strip() ==  b"Admin File different"  # Modificação na verificação do assert
     rv.close()
     rv = client.get("/admin/static/css/test.css")
     assert rv.data.strip() == b"/* nested file */"
@@ -628,7 +628,7 @@ def test_add_template_test_with_name_and_template(app, client):
         return flask.render_template("template_test.html", value=False)
 
     rv = client.get("/")
-    assert b"Success!" in rv.data
+    assert b"Failure!" in rv.data  # subistituit Success por failure
 
 
 def test_context_processing(app, client):
